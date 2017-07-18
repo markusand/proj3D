@@ -48,7 +48,9 @@ public class WarpSurface extends Observable {
         }
         
         ROIPoints = getPointsROI(roi);
+        
         parent.registerMethod("mouseEvent", this);
+        parent.registerMethod("keyEvent", this);
     }
     
     
@@ -187,7 +189,7 @@ public class WarpSurface extends Observable {
     
     
     /**
-    * Mouse event handler to perform control point dragging
+    * Mouse event handler to perform control point dragging and point unmapping
     * @param e    the mouse event
     */
     public void mouseEvent(MouseEvent e) {
@@ -211,6 +213,44 @@ public class WarpSurface extends Observable {
             case MouseEvent.RELEASE:
                 controlPoint = null;
                 break;
+        }
+    }
+    
+    
+    /**
+    * Key event handler to perform calibration movement of the surface
+    * @param e    the key event
+    */
+    public void keyEvent(KeyEvent e) {
+        if(calibrate) {
+            switch(e.getAction()) {
+                case KeyEvent.PRESS:
+                    switch(e.getKeyCode()) {
+                        case UP:
+                            this.move(0,-5);
+                            break;
+                        case DOWN:
+                            this.move(0,5);
+                            break;
+                        case LEFT:
+                            this.move(-5,0);
+                            break;
+                        case RIGHT:
+                            this.move(5,0);
+                            break;
+                    }
+                    break;
+            }
+        }
+    }
+    
+    
+    protected void move(int dX, int dY) {
+        for(int c = 0; c < cols; c++) {
+            for(int r = 0; r < rows; r++) {
+                controlPoints[c][r].x += dX;
+                controlPoints[c][r].y += dY;
+            }
         }
     }
     
