@@ -221,4 +221,35 @@ public class WarpSurface {
         return null;
     }
     
+    
+    /**
+    * Unmap point position in the surface to get the corresponding location in latitude and longitude coordinates
+    * @param x    Horizontal position
+    * @param y    Vertical position
+    * @return the latitude and longitude of the point
+    */
+    public LatLon unmapPoint(int x, int y) {
+        PVector point = new PVector(x,y);
+        for(int r = 1; r < rows; r++) {
+            for(int c = 1; c < cols; c++) {
+                LatLon tp = trianglePoint(point, c, r, c, r-1);    // Upper triangle
+                if(tp != null) return tp;
+                tp = trianglePoint(point, c, r, c-1, r);    // Lower triangle
+                if(tp != null) return tp;
+            }
+        }
+        return null;
+    }
+    
+    
+    protected LatLon trianglePoint(PVector point, int c, int r, int i, int j) {
+        if(Geometry.inTriangle(point, controlPoints[c][r], controlPoints[c-1][r-1], controlPoints[i][j])) {
+            PVector projPoint = Geometry.linesIntersection(controlPoints[c-1][r-1], point, controlPoints[i][j], controlPoints[c][r]);
+            float r1 = PVector.sub(projPoint, controlPoints[i][j]).mag() / PVector.sub(controlPoints[i][j], controlPoints[c][r]).mag();
+            float r2 = PVector.sub(point, controlPoints[c-1][r-1]).mag() / PVector.sub(projPoint, controlPoints[c-1][r-1]).mag();
+            LatLon decProjPoint = ROIPoints[i][j].lerp(ROIPoints[c][r], r1);
+            return ROIPoints[c-1][r-1].lerp(decProjPoint, r2);
+        } else return null;
+    }
+    
 }

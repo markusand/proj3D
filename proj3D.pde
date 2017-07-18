@@ -31,6 +31,21 @@ void draw() {
 }
 
 
+void mousePressed() {
+
+    LatLon loc = surface.unmapPoint(mouseX, mouseY);
+    println(loc);
+    if(loc != null) {
+        PVector pos = canvas.toScreen(loc.getLat(), loc.getLon());
+        canvas.beginDraw();
+        canvas.fill(#FF0000);
+        canvas.ellipse(pos.x, pos.y, 10, 10);
+        canvas.endDraw();
+    }
+
+}
+
+
 void keyPressed() {
     switch(key) {
         case 's':
