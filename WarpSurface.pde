@@ -5,7 +5,10 @@
 * @author    Marc Vilella
 * @version   1.1b
 */
-public class WarpSurface {
+
+import java.util.Observable;
+
+public class WarpSurface extends Observable {
     
     private LatLon[][] ROIPoints;
     private PVector[][] controlPoints;
@@ -191,6 +194,13 @@ public class WarpSurface {
         switch(e.getAction()) {
             case MouseEvent.PRESS:
                 if(calibrate) controlPoint = getControlPoint(mouseX, mouseY);
+                else {
+                    PVector location = unmapPoint(mouseX, mouseY);
+                    if(location != null) {
+                        setChanged();
+                        notifyObservers(location);
+                    }
+                }
                 break;
             case MouseEvent.DRAG:
                 if(calibrate && controlPoint != null) {
