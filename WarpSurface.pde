@@ -61,6 +61,7 @@ public class WarpSurface extends Observable {
     */
     public WarpSurface(PApplet parent, String configFilePath) {
         parent.registerMethod("mouseEvent", this);
+        parent.registerMethod("keyEvent", this);
         this.loadConfig(configFilePath);
     }
 
