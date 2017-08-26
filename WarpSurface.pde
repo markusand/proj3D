@@ -65,6 +65,20 @@ public class WarpSurface extends Observable {
         this.loadConfig(configFilePath);
     }
 
+
+    /**
+    * Return coordinates of corners in Region Of Interes
+    * @return coordinates of vertices
+    */
+    public LatLon[] getROI() {
+        return new LatLon[] {
+            ROIPoints[0][0],
+            ROIPoints[ROIPoints.length-1][0],
+            ROIPoints[ROIPoints.length-1][ROIPoints[0].length-1],
+            ROIPoints[0][ROIPoints[0].length-1]
+        };
+    }
+    
     
     /**
     * Find all points inside a Region of Interest that match with rows and columns
@@ -120,7 +134,7 @@ public class WarpSurface extends Observable {
         if(calibrate) {
             XML surface = new XML("surface");
             XML roi = surface.addChild("roi");
-            for(LatLon r : ROI) {
+            for(LatLon r : getROI()) {
                 XML location = roi.addChild("location");
                 location.setFloat("lat", r.getLat());
                 location.setFloat("lon", r.getLon());
