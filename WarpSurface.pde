@@ -310,9 +310,9 @@ public class WarpSurface extends Observable {
         PVector point = new PVector(x,y);
         for(int r = 1; r < rows; r++) {
             for(int c = 1; c < cols; c++) {
-                LatLon tp = trianglePoint(point, c, r, c, r-1);    // Upper triangle
+                LatLon tp = triangleLocation(point, c, r, c, r-1);    // Upper triangle
                 if(tp != null) return tp;
-                tp = trianglePoint(point, c, r, c-1, r);    // Lower triangle
+                tp = triangleLocation(point, c, r, c-1, r);    // Lower triangle
                 if(tp != null) return tp;
             }
         }
@@ -320,13 +320,42 @@ public class WarpSurface extends Observable {
     }
     
     
-    protected LatLon trianglePoint(PVector point, int c, int r, int i, int j) {
+    /**
+    * Map location in the surface to get the corresponding position in x and y screen coordinates
+    * @param location    Latitude and longitude of the location
+    * @return the x and y position in surface of the location
+    */
+    public PVector mapPoint(LatLon location) {
+        for(int r = 1; r < rows; r++) {
+            for(int c = 1; c < cols; c++) {
+                PVector tp = trianglePosition(location, c, r, c, r-1);    // Upper triangle
+                if(tp != null) return tp;
+                tp = trianglePosition(location, c, r, c-1, r);    // Lower triangle
+                if(tp != null) return tp;
+            }
+        }
+        return null;
+    }
+    
+    
+    protected LatLon triangleLocation(PVector point, int c, int r, int i, int j) {
         if(Geometry.inTriangle(point, controlPoints[c][r], controlPoints[c-1][r-1], controlPoints[i][j])) {
             PVector projPoint = Geometry.linesIntersection(controlPoints[c-1][r-1], point, controlPoints[i][j], controlPoints[c][r]);
             float r1 = PVector.sub(projPoint, controlPoints[i][j]).mag() / PVector.sub(controlPoints[i][j], controlPoints[c][r]).mag();
             float r2 = PVector.sub(point, controlPoints[c-1][r-1]).mag() / PVector.sub(projPoint, controlPoints[c-1][r-1]).mag();
             LatLon decProjPoint = ROIPoints[i][j].lerp(ROIPoints[c][r], r1);
             return ROIPoints[c-1][r-1].lerp(decProjPoint, r2);
+        } else return null;
+    }
+    
+    
+    protected PVector trianglePosition(LatLon location, int c, int r, int i, int j) {
+        if(Geometry.inTriangle(location, ROIPoints[c][r], ROIPoints[c-1][r-1], ROIPoints[i][j])) {
+            PVector projPoint = Geometry.linesIntersection(ROIPoints[c-1][r-1], location, ROIPoints[i][j], ROIPoints[c][r]);
+            float r1 = PVector.sub(projPoint, ROIPoints[i][j]).mag() / PVector.sub(ROIPoints[i][j], ROIPoints[c][r]).mag();
+            float r2 = PVector.sub(location, ROIPoints[c-1][r-1]).mag() / PVector.sub(projPoint, ROIPoints[c-1][r-1]).mag();
+            PVector decProjPoint = PVector.lerp(controlPoints[i][j], controlPoints[c][r], r1);
+            return PVector.lerp(controlPoints[c-1][r-1], decProjPoint, r2);
         } else return null;
     }
     
