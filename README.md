@@ -13,7 +13,7 @@ final LatLon[] ROI = new LatLon[] {
     new LatLon(42.496162,1.515728)
 };
 
-WarpSurface surface = new WarpSurface(this, 700, 300, 20, 10, ROI);
+WarpSurface surface = new WarpSurface(this, "surface.txt", 700, 300, 20, 10, ROI);
 
 ```
 
@@ -41,6 +41,13 @@ Apply the canvas into the surface
 ```
 surface.draw(canvas);
 ```
+
+Mapping from (lat,lon) location to (x,y) screen position and vice versa is possible through the given methods. If screen position or geographic location don't belong to surface, null value is returned
+```
+PVector position = surface.mapPoint(42.246543, 1.568294);
+LatLon location = surface.unmapPoint(mouseX, mouseY);
+```
+
 
 ## Licensing
 This project is licensed under the terms of the MIT license
