@@ -10,6 +10,8 @@ import java.util.Observable;
 
 public class WarpSurface extends Observable {
     
+    private final String CONFIG_FILE_PATH;
+    
     private LatLon[][] ROIPoints;
     private PVector[][] controlPoints;
     private int cols, rows;
@@ -30,7 +32,9 @@ public class WarpSurface extends Observable {
     * @param cols      the number of horizontal control points
     * @param rows      the number of vertical control points
     */
-    public WarpSurface(PApplet parent, float width, float height, int cols, int rows, LatLon[] roi) {
+    public WarpSurface(PApplet parent, String configFilePath, float width, float height, int cols, int rows, LatLon[] roi) {
+       
+        CONFIG_FILE_PATH = configFilePath;
         
         this.cols = cols;
         this.rows = rows;
@@ -62,6 +66,7 @@ public class WarpSurface extends Observable {
     public WarpSurface(PApplet parent, String configFilePath) {
         parent.registerMethod("mouseEvent", this);
         parent.registerMethod("keyEvent", this);
+        CONFIG_FILE_PATH = configFilePath;
         this.loadConfig(configFilePath);
     }
 
@@ -240,21 +245,29 @@ public class WarpSurface extends Observable {
         if(calibrate) {
             switch(e.getAction()) {
                 case KeyEvent.PRESS:
-                    switch(e.getKeyCode()) {
-                        case UP:
-                            this.move(0,-5);
+                    switch(e.getKey()) {
+                        case 's':
+                            if(calibrate) saveConfig(CONFIG_FILE_PATH);
                             break;
-                        case DOWN:
-                            this.move(0,5);
-                            break;
-                        case LEFT:
-                            this.move(-5,0);
-                            break;
-                        case RIGHT:
-                            this.move(5,0);
+                        case 'l':
+                            if(calibrate) loadConfig(CONFIG_FILE_PATH);
+                        case CODED:
+                            switch(e.getKeyCode()) {
+                                case UP:
+                                    this.move(0,-5);
+                                    break;
+                                case DOWN:
+                                    this.move(0,5);
+                                    break;
+                                case LEFT:
+                                    this.move(-5,0);
+                                    break;
+                                case RIGHT:
+                                    this.move(5,0);
+                                    break;
+                            }
                             break;
                     }
-                    break;
             }
         }
     }
