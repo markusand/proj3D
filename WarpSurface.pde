@@ -72,7 +72,7 @@ public class WarpSurface extends Observable {
 
 
     /**
-    * Return coordinates of corners in Region Of Interes
+    * Return coordinates of corners in Region Of Interest
     * @return coordinates of vertices
     */
     public LatLon[] getROI() {
