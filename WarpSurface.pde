@@ -215,9 +215,9 @@ public class WarpSurface extends Observable {
     public void mouseEvent(MouseEvent e) {
         switch(e.getAction()) {
             case MouseEvent.PRESS:
-                if(calibrate) controlPoint = getControlPoint(mouseX, mouseY);
+                if(calibrate) controlPoint = getControlPoint(e.getX(), e.getY());
                 else {
-                    PVector location = unmapPoint(mouseX, mouseY);
+                    PVector location = unmapPoint(e.getX(), e.getY());
                     if(location != null) {
                         setChanged();
                         notifyObservers(location);
@@ -226,8 +226,8 @@ public class WarpSurface extends Observable {
                 break;
             case MouseEvent.DRAG:
                 if(calibrate && controlPoint != null) {
-                    controlPoint.x = mouseX;
-                    controlPoint.y = mouseY;
+                    controlPoint.x = e.getX();
+                    controlPoint.y = e.getY();
                 }
                 break;
             case MouseEvent.RELEASE:
