@@ -32,9 +32,9 @@ public class WarpSurface extends Observable {
     * @param cols      the number of horizontal control points
     * @param rows      the number of vertical control points
     */
-    public WarpSurface(PApplet parent, String configFilePath, float width, float height, int cols, int rows, LatLon[] roi) {
+    public WarpSurface(PApplet parent, float width, float height, int cols, int rows, LatLon[] roi) {
        
-        CONFIG_FILE_PATH = configFilePath;
+        CONFIG_FILE_PATH = "warpsurface_default.xml";
         
         this.cols = cols;
         this.rows = rows;
