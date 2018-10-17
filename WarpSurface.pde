@@ -127,7 +127,7 @@ public class WarpSurface extends Observable {
                 controlPoints[c][r] = new PVector(points[i].getFloat("x"), points[i].getFloat("y"));
             }
             println("WarpSurface calibration loaded");
-        } else println("WarpSurface calibration file doesn't exist");
+        } else throw new IllegalArgumentException("WarpSurface calibration file does not exist");
     }
     
     
