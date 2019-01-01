@@ -21,9 +21,9 @@ Create a canvas object to draw into and that will be used as the surface texture
 ```java
 final LatLon[] bounds = new LatLon[] {
     new LatLon(42.5181, 1.50803),
-		new LatLon(42.495, 1.50803),
+    new LatLon(42.495, 1.50803),
     new LatLon(42.495, 1.55216),
-		new LatLon(42.5181, 1.55216)
+    new LatLon(42.5181, 1.55216)
 };
 
 WarpCanvas canvas = new WarpCanvas(this, 500, 300, bounds);
