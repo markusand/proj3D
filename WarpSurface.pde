@@ -273,6 +273,11 @@ public class WarpSurface extends Observable {
     }
     
     
+    /**
+    * Move the whole surface across the screen
+    * @param dX    Pixels to move in x direction
+    * @param dY    Pixels to move in y direction
+    */
     protected void move(int dX, int dY) {
         for(int c = 0; c < cols; c++) {
             for(int r = 0; r < rows; r++) {
@@ -338,6 +343,15 @@ public class WarpSurface extends Observable {
     }
     
     
+    /**
+    * Triangulate a surface's triangle to get the corresponding LatLon location
+    * @param point    Screen point in the surface's triangle (if in triangle)
+    * @param c        Column index of the triangle's vertex
+    * @param r        Row index of the triangle's vertex
+    * @param i        Column index of the quad vertex to select upper or lower triangle
+    * @param j        Row index of the quad vertex to select upper or lower triangle 
+    * @return the LatLon location of the point in the surface's triangle, null if point is not in the triangle
+    */
     protected LatLon triangleLocation(PVector point, int c, int r, int i, int j) {
         if(Geometry.inTriangle(point, controlPoints[c][r], controlPoints[c-1][r-1], controlPoints[i][j])) {
             PVector projPoint = Geometry.linesIntersection(controlPoints[c-1][r-1], point, controlPoints[i][j], controlPoints[c][r]);
@@ -349,6 +363,15 @@ public class WarpSurface extends Observable {
     }
     
     
+    /**
+    * Triangulate a surface's triangle to get the corresponding x,y position
+    * @param location Location coordinates in the triangle (if in triangle)
+    * @param c        Column index of the triangle's vertex
+    * @param r        Row index of the triangle's vertex
+    * @param i        Column index of the quad vertex to select upper or lower triangle
+    * @param j        Row index of the quad vertex to select upper or lower triangle 
+    * @return the LatLon location of the point in the surface's triangle, null if point is not in the triangle
+    */
     protected PVector trianglePosition(LatLon location, int c, int r, int i, int j) {
         if(Geometry.inTriangle(location, ROIPoints[c][r], ROIPoints[c-1][r-1], ROIPoints[i][j])) {
             PVector projPoint = Geometry.linesIntersection(ROIPoints[c-1][r-1], location, ROIPoints[i][j], ROIPoints[c][r]);
