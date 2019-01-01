@@ -10,9 +10,19 @@ public static class Geometry {
     public static PVector scalarProjection(PVector p, PVector a, PVector b) {
         PVector ap = PVector.sub(p, a);
         PVector ab = PVector.sub(b, a).normalize();
-        ab.mult( ap.dot(ab) );
+        ab.mult(ap.dot(ab));
         return PVector.add(a, ab);
     }
+    
+    
+    public static PVector closerLinePoint(PVector p, PVector a, PVector b) {
+        PVector projection = scalarProjection(p, a, b);
+        float lineLength = a.dist(b);
+        if(projection.dist(b) > lineLength) return a;
+        if(projection.dist(a) > lineLength) return b;
+        return projection;
+    }
+    
     
     public static boolean inTriangle(PVector p, PVector t1, PVector t2, PVector t3) {
         boolean b1 = Sign(p, t1, t2) < 0.0f;

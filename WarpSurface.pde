@@ -364,6 +364,44 @@ public class WarpSurface extends Observable {
     
     
     /**
+    * Get the location in the WarpSurface's border closer to the target location
+    * @param location    Latitude and longitude of the location
+    * @return the closest location coordinates in the WarpSurface's border
+    */
+    public LatLon closerBorderLocation(LatLon location) {
+      LatLon[] ROI = getROI();
+      LatLon closerBorderLocation = null;
+      float minDistance = Float.MAX_VALUE;
+      for(int i = 1; i < ROI.length; i++) {
+        LatLon borderLocation = (LatLon) Geometry.closerLinePoint(location, ROI[i-1], ROI[i]);
+        float distance = location.dist(borderLocation);
+        if(location.dist(borderLocation) < minDistance) {
+          closerBorderLocation = borderLocation;
+          minDistance = distance;
+        }
+      }
+      return closerBorderLocation;
+    }
+    
+    
+    /**
+    * Get the location in the intersection between the WarpSurface's border and the
+    * line defined by two locations
+    * @param inLocation  Location coordinates inside the WarpSurface
+    * @param outLocation Location coordinates outside the WarpSurface
+    * @return the intersection location coordinates if line intersects the border, null otherwise
+    */
+    public LatLon borderIntersectionLocation(LatLon inLocation, LatLon outLocation) {
+      LatLon[] ROI = getROI();
+      for(int i = 1; i < ROI.length; i++) {
+        LatLon intersection = (LatLon) Geometry.linesIntersection(inLocation, outLocation, ROI[i-1], ROI[i]);
+        if(intersection != null) return intersection;
+      }
+      return null;
+    }
+    
+    
+    /**
     * Triangulate a surface's triangle to get the corresponding LatLon location
     * @param point    Screen point in the surface's triangle (if in triangle)
     * @param c        Column index of the triangle's vertex
