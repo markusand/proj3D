@@ -28,9 +28,10 @@ public static class Geometry {
     
     
     private static PVector linesIntersection(PVector p1, PVector p2, PVector p3, PVector p4) {
-        float d = (p2.x-p1.x) * (p4.y - p3.y) - (p2.y-p1.y) * (p4.x - p3.x);
+        float d = (p2.x - p1.x) * (p4.y - p3.y) - (p2.y - p1.y) * (p4.x - p3.x);
         if(d == 0) return null;
-        return new PVector(p1.x+(((p3.x - p1.x) * (p4.y - p3.y) - (p3.y - p1.y) * (p4.x - p3.x)) / d)*(p2.x-p1.x), p1.y+(((p3.x - p1.x) * (p4.y - p3.y) - (p3.y - p1.y) * (p4.x - p3.x)) / d)*(p2.y-p1.y));
+        float a = ((p3.x - p1.x) * (p4.y - p3.y) - (p3.y - p1.y) * (p4.x - p3.x)) / d;
+        return new PVector(p1.x + a * (p2.x - p1.x), p1.y + a * (p2.y - p1.y));
     }
     
 }
