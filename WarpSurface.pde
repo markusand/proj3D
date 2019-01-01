@@ -312,7 +312,16 @@ public class WarpSurface extends Observable {
     * @return the latitude and longitude of the point
     */
     public LatLon unmapPoint(int x, int y) {
-        PVector point = new PVector(x,y);
+      return unmapPoint(new PVector(x, y));
+    }
+    
+    
+    /**
+    * Unmap point position in the surface to get the corresponding location in latitude and longitude coordinates
+    * @param point    Position in the surface
+    * @return the latitude and longitude of the point
+    */
+    public LatLon unmapPoint(PVector point) {
         for(int r = 1; r < rows; r++) {
             for(int c = 1; c < cols; c++) {
                 LatLon tp = triangleLocation(point, c, r, c, r-1);    // Upper triangle
@@ -322,6 +331,17 @@ public class WarpSurface extends Observable {
             }
         }
         return null;
+    }
+    
+    
+     /**
+    * Map location in the surface to get the corresponding position in x and y screen coordinates
+    * @param lat    Latitude of the location
+    * @param lon    Longitude of the location
+    * @return the x and y position in surface of the location
+    */
+    public PVector mapPoint(float lat, float lon) {
+      return mapPoint(new LatLon(lat, lon));
     }
     
     
