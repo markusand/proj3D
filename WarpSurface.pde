@@ -19,7 +19,7 @@ public class WarpSurface extends Observable {
     private boolean calibrate;
     private PVector controlPoint;
     
-    private Canvas prevCanvas = null;    
+    private WarpCanvas prevCanvas = null;    
     private PVector[][] drawROI;
     
     
@@ -166,7 +166,7 @@ public class WarpSurface extends Observable {
     * the control points can be moved with a mouse drag
     * @param canvas    the canvas to draw 
     */
-    public void draw(Canvas canvas) {
+    public void draw(WarpCanvas canvas) {
         
         if(!canvas.equals(prevCanvas)) { // Update drawROI points if canvas changed
             drawROI = canvas.toScreen(ROIPoints);

@@ -8,7 +8,7 @@ final LatLon[] ROI = new LatLon[] {
 };
 */
 
-Canvas canvas;
+WarpCanvas canvas;
 final LatLon[] bounds = new LatLon[] {
     new LatLon(42.5181, 1.50803),
     new LatLon(42.495, 1.50803),
@@ -20,7 +20,7 @@ final LatLon[] bounds = new LatLon[] {
 void setup() {
     size(900, 700, P2D);
     
-    canvas = new Canvas(this, "orto_epsg3857.jpg", bounds);
+    canvas = new WarpCanvas(this, "orto_epsg3857.jpg", bounds);
     //surface = new WarpSurface(this, 700, 300, 6, 3, ROI);
     surface = new WarpSurface(this, "surface.xml");
     

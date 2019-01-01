@@ -4,7 +4,7 @@
 * @author    Marc Vilella
 * @version   1.1b
 */
-public class Canvas extends PGraphics2D {
+public class WarpCanvas extends PGraphics2D {
 
     public final LatLon[] BOUNDS;
     
@@ -17,7 +17,7 @@ public class Canvas extends PGraphics2D {
     * @param h         the bounding box height
     * @param bounds    the bounding box coordinates. Coordinates order is TL, TR, BR, BL
     */
-    public Canvas(PApplet parent, int width, int height, LatLon[] bounds) {
+    public WarpCanvas(PApplet parent, int width, int height, LatLon[] bounds) {
         this.BOUNDS = bounds;
         setParent(parent);
         setPrimary(false);
@@ -33,7 +33,7 @@ public class Canvas extends PGraphics2D {
     * @param imgPath   the path to the image to render
     * @param bounds    the bounding box coordinates. Coordinates order is TL, TR, BR, BL
     */
-    public Canvas(PApplet parent, String imgPath, LatLon[] bounds) {
+    public WarpCanvas(PApplet parent, String imgPath, LatLon[] bounds) {
         this(parent, 0, 0, bounds);
         PImage bg = loadImage(imgPath);
         resize(bg.width, bg.height);
