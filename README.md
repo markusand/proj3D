@@ -13,7 +13,7 @@ final LatLon[] ROI = new LatLon[] {
     new LatLon(42.496162,1.515728)
 };
 
-WarpSurface surface = new WarpSurface(this, "surface.txt", 700, 300, 20, 10, ROI);
+WarpSurface surface = new WarpSurface(this, 700, 300, 20, 10, ROI);
 
 ```
 
@@ -21,10 +21,12 @@ Create a canvas object to draw into and that will be used as the surface texture
 ```java
 final LatLon[] bounds = new LatLon[] {
     new LatLon(42.5181, 1.50803),
-    new LatLon(42.495, 1.55216)
+		new LatLon(42.495, 1.50803),
+    new LatLon(42.495, 1.55216),
+		new LatLon(42.5181, 1.55216)
 };
 
-Canvas canvas = new Canvas(this, 500, 300, bounds);
+WarpCanvas canvas = new WarpCanvas(this, 500, 300, bounds);
 ```
 
 Draw into canvas as it would be done into any PGraphics object.
@@ -47,6 +49,8 @@ Mapping from (lat,lon) location to (x,y) screen position and vice versa is possi
 PVector position = surface.mapPoint(42.246543, 1.568294);
 LatLon location = surface.unmapPoint(mouseX, mouseY);
 ```
+
+The WarpSurface is observable and returns the location of the clicked point (if the point is inside the surface's borders) to any class implementing the Observer interface that is observing it.
 
 
 ## Licensing
