@@ -15,7 +15,7 @@ public class Canvas extends PGraphics2D {
     * @param parent    the sketch PApplet
     * @param w         the bounding box width
     * @param h         the bounding box height
-    * @param bounds    the bounding box coordinates. First coordinate is TOP-LEFT and second BOTTOM-RIGHT
+    * @param bounds    the bounding box coordinates. Coordinates order is TL, TR, BR, BL
     */
     public Canvas(PApplet parent, int width, int height, LatLon[] bounds) {
         this.BOUNDS = bounds;
@@ -31,7 +31,7 @@ public class Canvas extends PGraphics2D {
     * displayed in the surface
     * @param parent    the sketch PApplet
     * @param imgPath   the path to the image to render
-    * @param bounds    the bounding box coordinates. First coordinate is TOP-LEFT and second BOTTOM-RIGHT
+    * @param bounds    the bounding box coordinates. Coordinates order is TL, TR, BR, BL
     */
     public Canvas(PApplet parent, String imgPath, LatLon[] bounds) {
         this(parent, 0, 0, bounds);
@@ -50,11 +50,11 @@ public class Canvas extends PGraphics2D {
     */
     @Override
     public void resize(int width, int height) {
-        float dX = BOUNDS[0].dist(BOUNDS[0].getLat(), BOUNDS[1].getLon(), GeoDatum.WGS84);
-        float dY = BOUNDS[0].dist(BOUNDS[1].getLat(), BOUNDS[0].getLon(), GeoDatum.WGS84);
+        float dX = BOUNDS[0].dist(BOUNDS[0].getLat(), BOUNDS[2].getLon(), GeoDatum.WGS84);
+        float dY = BOUNDS[0].dist(BOUNDS[2].getLat(), BOUNDS[0].getLon(), GeoDatum.WGS84);
         float ratio = dX / dY;
-        int w = ratio < 1 ? int(height*ratio) : width;
-        int h = ratio < 1 ? height : int(width/ratio);
+        int w = ratio < 1 ? int(height * ratio) : width;
+        int h = ratio < 1 ? height : int(width / ratio);
         setSize(w, h);
     }
     
@@ -78,10 +78,10 @@ public class Canvas extends PGraphics2D {
     * @param locations    Array of geographic coordinates (lat, lon)
     * @return translated x,y position for every coordinate in array
     */
-    public PVector[] toScreen(LatLon... locations) {
+    public PVector[] toScreen(LatLon[] locations) {
         PVector[] points = new PVector[locations.length];
         for(int i = 0; i < points.length; i++) {
-            points[i] = toScreen(locations[i].getLat(), locations[i].getLon());
+            points[i] = toScreen(locations[i]);
         }
         return points;
     }
@@ -94,10 +94,31 @@ public class Canvas extends PGraphics2D {
     * @return translated x,y position of the location
     */
     public PVector toScreen(float lat, float lon) {
-        return new PVector(
-            map(lon, BOUNDS[0].getLon(), BOUNDS[1].getLon(), 0, this.width),
-            map(lat, BOUNDS[0].getLat(), BOUNDS[1].getLat(), 0 , this.height)
-        );
+        return toScreen(new LatLon(lat, lon));
+    }
+    
+    
+    /**
+    * Translate a latitude,longitude coordinate into a canvas x,y position
+    * @param location  Latitude and Longitude coordinates of the location
+    * @return translated x,y position of the location
+    */
+    public PVector toScreen(LatLon location) {
+        if(Geometry.inTriangle(location, BOUNDS[2], BOUNDS[0], BOUNDS[1])) {
+            PVector projPoint = Geometry.linesIntersection(BOUNDS[0], location, BOUNDS[1], BOUNDS[2]);
+            float r1 = PVector.sub(projPoint, BOUNDS[1]).mag() / PVector.sub(BOUNDS[1], BOUNDS[2]).mag();
+            float r2 = PVector.sub(location, BOUNDS[0]).mag() / PVector.sub(projPoint, BOUNDS[0]).mag();
+            PVector decProjPoint = PVector.lerp(new PVector(this.width, 0), new PVector(this.width, this.height), r1);
+            return PVector.lerp(new PVector(0, 0), decProjPoint, r2);
+        }
+        if(Geometry.inTriangle(location, BOUNDS[2], BOUNDS[0], BOUNDS[3])) {
+            PVector projPoint = Geometry.linesIntersection(BOUNDS[0], location, BOUNDS[3], BOUNDS[2]);
+            float r1 = PVector.sub(projPoint, BOUNDS[3]).mag() / PVector.sub(BOUNDS[3], BOUNDS[2]).mag();
+            float r2 = PVector.sub(location, BOUNDS[0]).mag() / PVector.sub(projPoint, BOUNDS[0]).mag();
+            PVector decProjPoint = PVector.lerp(new PVector(0, this.height), new PVector(this.width, this.height), r1);
+            return PVector.lerp(new PVector(0, 0), decProjPoint, r2);
+        }
+        return null;
     }
     
 }

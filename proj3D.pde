@@ -11,7 +11,9 @@ final LatLon[] ROI = new LatLon[] {
 Canvas canvas;
 final LatLon[] bounds = new LatLon[] {
     new LatLon(42.5181, 1.50803),
-    new LatLon(42.495, 1.55216)
+    new LatLon(42.495, 1.50803),
+    new LatLon(42.495, 1.55216),
+    new LatLon(42.5181, 1.55216)
 };
 
 
